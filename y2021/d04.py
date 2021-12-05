@@ -23,21 +23,22 @@ def main():
     draws, boards = parse_data(data)
 
     ns_drawn = set()
-    score = 0
-    winner = False
+    scores = []
     for n in draws:
         ns_drawn.add(n)
-        for board in boards:
+        for i, board in enumerate(boards):
             if is_winning_board(ns_drawn, board):
                 ns_board = set(n for r in board for n in r)
                 ns_not_drawn = ns_board - ns_drawn
                 score = sum(ns_not_drawn) * n
-                winner = True
+                scores.append(score)
+                boards.pop(i)
 
-        if winner:
+        if not boards:
             break
 
-    print(f"Part 1: {score}")
+    print(f"Part 1: {scores[0]}")
+    print(f"Part 2: {scores[-1]}")
 
 
 if __name__ == "__main__":
