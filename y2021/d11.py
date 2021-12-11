@@ -36,12 +36,19 @@ def main():
 
     grid = parse_data(data)
 
-    n_flashes_tot = 0
-    for _ in range(100):
+    n_flashes_100s = 0
+    n_steps = 0
+    while True:
+        n_steps += 1
         grid, n_flashes = step(grid)
-        n_flashes_tot += n_flashes
+        if n_steps <= 100:
+            n_flashes_100s += n_flashes
 
-    print(f"Part 1: {n_flashes_tot}")
+        if n_flashes == 100:
+            break
+
+    print(f"Part 1: {n_flashes_100s}")
+    print(f"Part 2: {n_steps}")
 
 
 if __name__ == "__main__":
