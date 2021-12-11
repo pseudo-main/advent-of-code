@@ -16,27 +16,46 @@ def trim_line(line):
     return line
 
 
-def error_score(line):
-    error_score_map = {')': 3, ']': 57, '}': 1197, '>': 25137}
-    search = [re.escape(c) for c in error_score_map.keys()]
+def is_corrupted(line):
+    chars_illegal = [')', ']', '}', '>']
+    search = [re.escape(c) for c in chars_illegal]
     pattern = re.compile('|'.join(search))
+    return pattern.search(line)
 
-    error_indices = pattern.search(line)
 
-    if error_indices:
-        return error_score_map[error_indices.group(0)]
-    else:
-        return 0
+def score_error(line):
+    score_error_map = {')': 3, ']': 57, '}': 1197, '>': 25137}
+    search = [re.escape(c) for c in score_error_map.keys()]
+    pattern = re.compile('|'.join(search))
+    return score_error_map[pattern.search(line).group(0)]
+
+
+def score_incomp(line):
+    score_incomp_map = {'(': 1, '[': 2, '{': 3, '<': 4}
+    findall = [re.escape(c) for c in score_incomp_map.keys()]
+    pattern = re.compile('|'.join(findall))
+
+    score_incomp = 0
+    for match in pattern.findall(line)[::-1]:
+        score_incomp = score_incomp * 5 + score_incomp_map[match]
+
+    return score_incomp
 
 
 def main():
     with open("y2021/input/d10.txt") as file:
         data = file.read().splitlines()
 
-    lines_trimmed = [trim_line(line) for line in data]
-    error_score_tot = sum(error_score(line) for line in lines_trimmed)
+    lines_trim = [trim_line(line) for line in data]
+    lines_corrupt = [line for line in lines_trim if is_corrupted(line)]
+    score_error_tot = sum(score_error(line) for line in lines_corrupt)
 
-    print(f"Part 1: {error_score_tot}")
+    lines_incomp = [line for line in lines_trim if not is_corrupted(line)]
+    scores_incomp = [score_incomp(line) for line in lines_incomp]
+    score_incomp_mid = sorted(scores_incomp)[round(len(scores_incomp) / 2)]
+
+    print(f"Part 1: {score_error_tot}")
+    print(f"Part 2: {score_incomp_mid}")
 
 
 if __name__ == "__main__":
