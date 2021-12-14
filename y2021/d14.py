@@ -2,33 +2,44 @@ from collections import Counter
 
 
 def parse_data(data):
-    polymer = data[0]
-    rules = dict()
-    for line in data[1].splitlines():
-        pair, insert = line.split(" -> ")
-        rules[pair] = insert + pair[1]
-
-    return polymer, rules
+    polymer, _, *rules = data.splitlines()
+    polymer_pairs = Counter(map(''.join, zip(polymer, polymer[1:])))
+    elements = Counter(polymer)
+    rules = dict(rule.split(" -> ") for rule in rules)
+    return polymer_pairs, elements, rules
 
 
-def apply_rules(pair, rules):
-    if pair in rules:
-        return rules[pair]
-    return pair[1]
+def step(polymer_pairs, elements, rules):
+    polymer_pairs_out = polymer_pairs.copy()
+    for pair, n in polymer_pairs.items():
+        if pair in rules:
+            polymer_pairs_out[pair] -= n
+            polymer_pairs_out[pair[0] + rules[pair]] += n
+            polymer_pairs_out[rules[pair] + pair[1]] += n
+            elements[rules[pair]] += n
+
+    return polymer_pairs_out, elements
+
+
+def element_diff_max(elements):
+    return max(elements.values()) - min(elements.values())
 
 
 def main():
     with open("y2021/input/d14.txt") as file:
-        data = file.read().split("\n\n")
+        data = file.read()
 
-    polymer, rules = parse_data(data)
-    for _ in range(10):
-        pairs = [polymer[i:i+2] for i in range(len(polymer) - 1)]
-        polymer = polymer[0] + ''.join(apply_rules(p, rules) for p in pairs)
+    polymer_pairs, elements, rules = parse_data(data)
+    for i in range(40):
+        polymer_pairs, elements = step(polymer_pairs, elements, rules)
 
-    element_counts = Counter(polymer).values()
-    element_diff = max(element_counts) - min(element_counts)
-    print(f"Part 1: {element_diff}")
+        if i == 9:
+            element_diff_10 = element_diff_max(elements)
+
+    element_diff_40 = element_diff_max(elements)
+
+    print(f"Part 1: {element_diff_10}")
+    print(f"Part 2: {element_diff_40}")
 
 
 if __name__ == "__main__":
