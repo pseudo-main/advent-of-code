@@ -1,5 +1,6 @@
-from math import floor, ceil
 import ast
+from itertools import permutations
+from math import floor, ceil
 
 
 def parse_data(data):
@@ -63,6 +64,18 @@ def split(pair):
             return False, pair
 
 
+def add_reduce(snailfish_number_l, snailfish_number_r):
+    snailfish_number = [snailfish_number_l, snailfish_number_r]
+    while True:
+        exploded, _, snailfish_number, _ = explode(snailfish_number)
+        if exploded:
+            continue
+
+        did_split, snailfish_number = split(snailfish_number)
+        if not did_split:
+            return snailfish_number
+
+
 def magnitude(pair):
     if isinstance(pair, list):
         subpair_l, subpair_r = pair
@@ -81,19 +94,14 @@ def main():
 
     final_sum = snailfish_numbers[0]
     for snailfish_number in snailfish_numbers[1:]:
-        final_sum = [final_sum, snailfish_number]
-        while True:
-            exploded, _, final_sum, _ = explode(final_sum)
-            if exploded:
-                continue
-
-            did_split, final_sum = split(final_sum)
-            if not did_split:
-                break
+        final_sum = add_reduce(final_sum, snailfish_number)
 
     final_sum_magnitude = magnitude(final_sum)
+    final_sum_magnitude_max = max(
+        magnitude(add_reduce(*p)) for p in permutations(snailfish_numbers, 2))
 
     print(f"Part 1: {final_sum_magnitude}")
+    print(f"Part 2: {final_sum_magnitude_max}")
 
 
 if __name__ == "__main__":
