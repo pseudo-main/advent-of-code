@@ -1,4 +1,5 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
+from math import prod
 
 
 @dataclass
@@ -13,6 +14,20 @@ class Game:
                     return False
 
         return True
+
+    def power(self) -> int:
+        min_cubes = {
+            "red": 0,
+            "green": 0,
+            "blue": 0,
+        }
+
+        for set in self.sets:
+            for color, n_cubes in min_cubes.items():
+                if color in set and set[color] > n_cubes:
+                    min_cubes[color] = set[color]
+
+        return prod(min_cubes.values())
 
 
 class Solver:
@@ -51,6 +66,9 @@ class Solver:
         games = self.read_input(path)
         games_possible = [game.id for game in games if game.is_possible(self.CUBES)]
         print(f"Part 1: {sum(games_possible)}")
+
+        powers = [game.power() for game in games]
+        print(f"Part 2: {sum(powers)}")
 
 
 if __name__ == "__main__":
