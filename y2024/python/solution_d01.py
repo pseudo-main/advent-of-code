@@ -20,9 +20,7 @@ def read_input(filepath: str) -> (list, list):
 if __name__ == "__main__":
     ids_a, ids_b = read_input(FILEPATH)
 
-    sorted_ids_a = sorted(ids_a)
-    sorted_ids_b = sorted(ids_b)
-    total_distance = sum(abs(a - b) for a, b in zip(sorted_ids_a, sorted_ids_b))
+    total_distance = sum(abs(a - b) for a, b in zip(sorted(ids_a), sorted(ids_b)))
     print(f"Part 1: {total_distance}")
 
     ids_b_counts = Counter(ids_b)
