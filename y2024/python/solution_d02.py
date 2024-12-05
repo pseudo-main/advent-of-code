@@ -1,16 +1,6 @@
 FILEPATH = "y2024/input/input_d02.txt"
 
 
-def read_input(filepath: str) -> (list, list):
-    reports = []
-
-    with open(filepath, "r") as f:
-        for line in f:
-            reports.append([int(level) for level in line.split()])
-
-    return reports
-
-
 def is_safe_report(report: list[int]) -> bool:
     differences = [a - b for a, b in zip(report[:-1], report[1:])]
 
@@ -29,7 +19,8 @@ def is_dampened_safe_report(report: list[int]) -> bool:
 
 
 if __name__ == "__main__":
-    reports = read_input(FILEPATH)
+    with open(FILEPATH, "r") as f:
+        reports = [list(map(int, line.split())) for line in f]
 
     n_safe_reports = sum([is_safe_report(r) for r in reports])
     print(f"Part 1: {n_safe_reports}")
