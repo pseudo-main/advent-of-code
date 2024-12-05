@@ -13,19 +13,10 @@ def read_input(filepath: str) -> (list, list):
 
 def is_safe_report(report: list[int]) -> bool:
     differences = [a - b for a, b in zip(report[:-1], report[1:])]
-    
-    if all(l > 0 for l in differences):
-        if max(differences) > 3 or min(differences) < 1:
-            return False
 
+    if all(1 <= d <= 3 for d in differences) or all(-3 <= d <= -1 for d in differences):
         return True
 
-    elif all(l < 0 for l in differences):
-        if max(differences) > -1 or min(differences) < -3:
-            return False
-
-        return True
-    
     return False
 
 
@@ -34,4 +25,3 @@ if __name__ == "__main__":
 
     n_safe_reports = sum(1 for r in reports if is_safe_report(r))
     print(f"Part 1: {n_safe_reports}")
-
