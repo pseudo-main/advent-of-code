@@ -20,8 +20,19 @@ def is_safe_report(report: list[int]) -> bool:
     return False
 
 
+def is_dampened_safe_report(report: list[int]) -> bool:
+    for i in range(len(report)):
+        if is_safe_report(report[:i] + report[i + 1 :]):
+            return True
+
+    return False
+
+
 if __name__ == "__main__":
     reports = read_input(FILEPATH)
 
-    n_safe_reports = sum(1 for r in reports if is_safe_report(r))
+    n_safe_reports = sum([is_safe_report(r) for r in reports])
     print(f"Part 1: {n_safe_reports}")
+
+    n_dampened_safe_reports = sum([is_dampened_safe_report(r) for r in reports])
+    print(f"Part 2: {n_dampened_safe_reports}")
