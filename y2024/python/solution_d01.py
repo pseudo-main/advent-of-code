@@ -1,6 +1,5 @@
 from collections import Counter
 
-
 FILEPATH = "y2024/input/input_d01.txt"
 
 
