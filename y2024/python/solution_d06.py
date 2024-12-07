@@ -16,17 +16,17 @@ def patrol(map: dict[(int, int):str], x: int, y: int) -> (bool, set[(int, int)])
         if (x + dx, y + dy) not in map:
             return False, visited
 
-        if map[(x + dx, y + dy)] != "#":
-            x += dx
-            y += dy
-            visited.add((x, y))
-        else:
+        if map[(x + dx, y + dy)] == "#":
             dx, dy = directions[(dx, dy)]
 
             if (x, y, dx, dy) in turns:
                 return True, visited
 
             turns.add((x, y, dx, dy))
+
+        x += dx
+        y += dy
+        visited.add((x, y))
 
 
 if __name__ == "__main__":
