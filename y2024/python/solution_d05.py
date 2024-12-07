@@ -1,4 +1,5 @@
 from collections import defaultdict
+from functools import cmp_to_key
 
 FILEPATH = "y2024/input/input_d05.txt"
 
@@ -20,3 +21,11 @@ if __name__ == "__main__":
     correct_updates = [pages for pages in updates if is_correct_order(pages, rules)]
     total = sum(update[(len(update) - 1) // 2] for update in correct_updates)
     print(f"Part 1: {total}")
+
+    wrong_updates = [pages for pages in updates if not is_correct_order(pages, rules)]
+    fixed_updates = [
+        sorted(pages, key=cmp_to_key(lambda x, y: -1 + 2 * (y in rules[x])))
+        for pages in wrong_updates
+    ]
+    total_fixed = sum(update[(len(update) - 1) // 2] for update in fixed_updates)
+    print(f"Part 2: {total_fixed}")
