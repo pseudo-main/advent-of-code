@@ -1,4 +1,5 @@
 from itertools import product
+from operator import add, mul
 
 FILEPATH = "y2024/input/input_d07.txt"
 
@@ -16,7 +17,7 @@ def calibrate(equations: list[int], operators: str) -> int:
 def is_possible(result: int, terms: list[int], operators: list[str]) -> bool:
     value = terms[0]
     for operator, term in zip(operators, terms[1:]):
-        value = eval(str(value) + operator + str(term))
+        value = operator(value, term)
 
     return value == result
 
@@ -28,5 +29,5 @@ if __name__ == "__main__":
             for equation in f.read().splitlines()
         ]
 
-    calibration_result = calibrate(equations, "+*")
+    calibration_result = calibrate(equations, [add, mul])
     print(f"Part 1: {calibration_result}")
