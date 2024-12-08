@@ -22,12 +22,19 @@ def is_possible(result: int, terms: list[int], operators: list[str]) -> bool:
     return value == result
 
 
+def concatenate_digits(a: int, b: int) -> int:
+    return int(str(a) + str(b))
+
+
 if __name__ == "__main__":
     with open(FILEPATH, "r") as f:
         equations = [
-            map(int, equation.replace(":", " ").split())
+            list(map(int, equation.replace(":", " ").split()))
             for equation in f.read().splitlines()
         ]
 
     calibration_result = calibrate(equations, [add, mul])
     print(f"Part 1: {calibration_result}")
+
+    calibration_result_fixed = calibrate(equations, [add, mul, concatenate_digits])
+    print(f"Part 2: {calibration_result_fixed}")
