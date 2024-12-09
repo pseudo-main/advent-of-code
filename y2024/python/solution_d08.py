@@ -19,30 +19,25 @@ if __name__ == "__main__":
     ]
 
     antinodes = set()
-    for (x1, y1), (x2, y2) in combos:
-        dx, dy = (x2 - x1, y2 - y1)
-        antinodes.add((x1 - dx, y1 - dy))
-        antinodes.add((x2 + dx, y2 + dy))
-
-    n_valid = sum(
-        0 <= x < len(lines[0]) and 0 <= y < len(lines) for (x, y) in antinodes
-    )
-    print(f"Part 1: {n_valid}")
-
-    antinodes_harmonic = {
-        location for locations in antennas.values() for location in locations
-    }
+    antinodes_harmonic = {l for locations in antennas.values() for l in locations}
     for (x1, y1), (x2, y2) in combos:
         dx, dy = (x2 - x1, y2 - y1)
 
         x, y = (x1 - dx, y1 - dy)
+        if 0 <= x < len(lines[0]) and 0 <= y < len(lines):
+            antinodes.add((x, y))
+
         while 0 <= x < len(lines[0]) and 0 <= y < len(lines):
             antinodes_harmonic.add((x, y))
             x, y = (x - dx, y - dy)
 
         x, y = (x2 + dx, y2 + dy)
+        if 0 <= x < len(lines[0]) and 0 <= y < len(lines):
+            antinodes.add((x, y))
+
         while 0 <= x < len(lines[0]) and 0 <= y < len(lines):
             antinodes_harmonic.add((x, y))
             x, y = (x + dx, y + dy)
 
+    print(f"Part 1: {len(antinodes)}")
     print(f"Part 2: {len(antinodes_harmonic)}")
