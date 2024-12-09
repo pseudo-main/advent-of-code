@@ -10,25 +10,25 @@ if __name__ == "__main__":
         ]
 
     disk_blocks = disk.copy()
-    idx_last_digit = len(disk_blocks) - 1
-    idx = 0
-    while idx < idx_last_digit:
-        if disk_blocks[idx] == ".":
-            disk_blocks[idx] = disk_blocks[idx_last_digit]
-            disk_blocks[idx_last_digit] = "."
+    j = len(disk_blocks) - 1
+    i = 0
+    while i < j:
+        if disk_blocks[i] != ".":
+            i += 1
+            continue
 
-            while disk_blocks[idx_last_digit] == ".":
-                idx_last_digit -= 1
+        disk_blocks[i] = disk_blocks[j]
+        disk_blocks[j] = "."
 
-        idx += 1
+        while disk_blocks[j] == ".":
+            j -= 1
 
     checksum_blocks = sum(i * x for i, x in enumerate(disk_blocks) if x != ".")
     print(f"Part 1: {checksum_blocks}")
 
     disk_files = disk.copy()
-    idx_last_file_block = len(disk_files)
     file_size = 0
-    for i in range(idx_last_file_block)[::-1]:
+    for i in range(len(disk_files))[::-1]:
         if file_size == 0 and disk_files[i] == ".":
             continue
 
