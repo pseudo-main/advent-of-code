@@ -22,18 +22,21 @@ if __name__ == "__main__":
     graph = {(x, y): get_valid_neighbours(map, x, y) for x, y in map.keys()}
     trailheads = {(x, y) for x, y in map.keys() if map[(x, y)] == 0}
     score = 0
+    rating = 0
 
     for x, y in trailheads:
-        seen = set()
+        seen = []
         nodes = deque([(x, y)])
 
         while nodes:
             node = nodes.pop()
-            seen.add(node)
+            seen.append(node)
 
             for neighbour in graph[node]:
                 nodes.append(neighbour)
 
-        score += sum(map[node] == 9 for node in seen)
+        score += sum(map[node] == 9 for node in set(seen))
+        rating += sum(map[node] == 9 for node in seen)
 
     print(f"Part 1: {score}")
+    print(f"Part 2: {rating}")
