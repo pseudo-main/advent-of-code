@@ -1,6 +1,9 @@
+from functools import lru_cache
+
 FILEPATH = "y2024/input/input_d11.txt"
 
 
+@lru_cache(maxsize=None)
 def blink(stone: int) -> list[int]:
     if stone == 0:
         return [1]
@@ -11,6 +14,7 @@ def blink(stone: int) -> list[int]:
         return [stone * 2024]
 
 
+@lru_cache(maxsize=None)
 def count_after_blinking(stone: int, iteration: int) -> int:
     stones_after_blinking = blink(stone)
 
@@ -28,5 +32,8 @@ if __name__ == "__main__":
     with open(FILEPATH, "r") as f:
         stones = [int(x) for x in f.read().split()]
 
-    n_stones_25_iterations = sum(count_after_blinking(stone, 25) for stone in stones)
-    print(f"Part 1: {n_stones_after_25_iterations}")
+    n_stones_25 = sum(count_after_blinking(stone, 25) for stone in stones)
+    print(f"Part 1: {n_stones_25}")
+
+    n_stones_75 = sum(count_after_blinking(stone, 75) for stone in stones)
+    print(f"Part 2: {n_stones_75}")
