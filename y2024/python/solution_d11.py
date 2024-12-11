@@ -16,16 +16,12 @@ def blink(stone: int) -> list[int]:
 
 @lru_cache(maxsize=None)
 def count_after_blinking(stone: int, iteration: int) -> int:
-    stones_after_blinking = blink(stone)
+    stones = blink(stone)
 
     if iteration == 1:
-        return len(stones_after_blinking)
+        return len(stones)
 
-    n_stones = 0
-    for stone_after_blinking in stones_after_blinking:
-        n_stones += count_after_blinking(stone_after_blinking, iteration - 1)
-
-    return n_stones
+    return sum(count_after_blinking(s, iteration - 1) for s in stones)
 
 
 if __name__ == "__main__":
