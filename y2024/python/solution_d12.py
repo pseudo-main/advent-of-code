@@ -1,6 +1,6 @@
 from collections import defaultdict, deque
 
-FILEPATH = "y2024/samples/sample_d12_p01.txt"
+FILEPATH = "y2024/input/input_d12.txt"
 
 
 def depth_first_search(
@@ -28,15 +28,17 @@ if __name__ == "__main__":
             for x, c in enumerate(row)
         }
 
-    directions = {(1, 0), (-1, 0), (0, 1), (0, -1)}
+    directions = {"E": (1, 0), "W": (-1, 0), "S": (0, 1), "N": (0, -1)}
     graph = defaultdict(set)
-    perimeter_map = {}
+    perimeter_map = defaultdict(set)
 
     for x, y in map.keys():
-        surrounding = {(x + dx, y + dy) for dx, dy in directions}
-        same_plot = {s for s in surrounding if map.get(s) == map[(x, y)]}
-        graph[(x, y)].update(same_plot)
-        perimeter_map[(x, y)] = 4 - len(same_plot)
+        for direction, (dx, dy) in directions.items():
+            c = (x + dx, y + dy)
+            if map.get(c) == map[(x, y)]:
+                graph[(x, y)].add(c)
+            else:
+                perimeter_map[(x, y)].add(direction)
 
     total_price = 0
     seen = set()
@@ -46,6 +48,6 @@ if __name__ == "__main__":
 
         plot = depth_first_search(graph, c)
         seen.update(plot)
-        total_price += sum(perimeter_map[pc] for pc in plot) * len(plot)
+        total_price += sum(len(perimeter_map[pc]) for pc in plot) * len(plot)
 
     print(f"Part 1: {total_price}")
