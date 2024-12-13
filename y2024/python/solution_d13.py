@@ -29,12 +29,7 @@ if __name__ == "__main__":
 
     for v1_x, v1_y, v2_x, v2_y, v3_x, v3_y in instructions:
         x1, x2 = cramers_rule(v1_x, v1_y, v2_x, v2_y, v3_x, v3_y)
-        if (
-            x1.is_integer()
-            and x2.is_integer()
-            and (0 <= x1 <= 100)
-            and (0 <= x2 <= 100)
-        ):
+        if x1.is_integer() and x2.is_integer():
             tokens_spent += int(x1 * c1 + x2 * c2)
 
         x1_p2, x2_p2 = cramers_rule(
