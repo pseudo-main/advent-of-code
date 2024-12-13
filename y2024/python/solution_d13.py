@@ -8,7 +8,7 @@ def cramers_rule(
 ) -> tuple[float, float]:
     det = v1_x * v2_y - v1_y * v2_x
     if det == 0:
-        return float(None), float(None)
+        return -1.0, -1.0
 
     x1 = (v3_x * v2_y - v3_y * v2_x) / det
     x2 = (v1_x * v3_y - v1_y * v3_x) / det
@@ -23,6 +23,7 @@ if __name__ == "__main__":
         ]
 
     tokens_spent = 0
+    tokens_spent_p2 = 0
     c1 = 3
     c2 = 1
 
@@ -31,4 +32,11 @@ if __name__ == "__main__":
         if (x1 % 1 == 0) and (x2 % 1 == 0) and (0 <= x1 <= 100) and (0 <= x2 <= 100):
             tokens_spent += int(x1 * c1 + x2 * c2)
 
+        x1_p2, x2_p2 = cramers_rule(
+            v1_x, v1_y, v2_x, v2_y, v3_x + int(1e13), v3_y + int(1e13)
+        )
+        if (x1_p2 % 1 == 0) and (x2_p2 % 1 == 0):
+            tokens_spent_p2 += int(x1_p2 * c1 + x2_p2 * c2)
+
     print(f"Part 1: {tokens_spent}")
+    print(f"Part_2: {tokens_spent_p2}")
