@@ -5,10 +5,10 @@ FILEPATH = "y2024/input/input_d13.txt"
 
 def cramers_rule(
     v1_x: int, v1_y: int, v2_x: int, v2_y: int, v3_x: int, v3_y: int
-) -> tuple[float, float]:
+) -> tuple[float | None, float | None]:
     det = v1_x * v2_y - v1_y * v2_x
     if det == 0:
-        return -1.0, -1.0
+        return None, None
 
     x1 = (v3_x * v2_y - v3_y * v2_x) / det
     x2 = (v1_x * v3_y - v1_y * v3_x) / det
