@@ -3,16 +3,20 @@ import re
 FILEPATH = "y2024/input/input_d13.txt"
 
 
-def cramers_rule(
-    v1_x: int, v1_y: int, v2_x: int, v2_y: int, v3_x: int, v3_y: int
-) -> tuple[float | None, float | None]:
-    det = v1_x * v2_y - v1_y * v2_x
-    if det == 0:
-        return None, None
+def tokens_required(x_a: int, y_a: int, x_b: int, y_b: int, x_p: int, y_p: int) -> int:
+    c_a = 3
+    c_b = 1
 
-    x1 = (v3_x * v2_y - v3_y * v2_x) / det
-    x2 = (v1_x * v3_y - v1_y * v3_x) / det
-    return x1, x2
+    det = x_a * y_b - y_a * x_b
+    if det == 0:
+        return 0
+
+    a = (x_p * y_b - y_p * x_b) / det
+    b = (x_a * y_p - y_a * x_p) / det
+    if not (a.is_integer() and b.is_integer()):
+        return 0
+
+    return int(a * c_a + b * c_b)
 
 
 if __name__ == "__main__":
@@ -22,21 +26,11 @@ if __name__ == "__main__":
             list(map(int, pattern.findall(part))) for part in f.read().split("\n\n")
         ]
 
-    tokens_spent = 0
-    tokens_spent_p2 = 0
-    c1 = 3
-    c2 = 1
-
-    for v1_x, v1_y, v2_x, v2_y, v3_x, v3_y in instructions:
-        x1, x2 = cramers_rule(v1_x, v1_y, v2_x, v2_y, v3_x, v3_y)
-        if x1.is_integer() and x2.is_integer():
-            tokens_spent += int(x1 * c1 + x2 * c2)
-
-        x1_p2, x2_p2 = cramers_rule(
-            v1_x, v1_y, v2_x, v2_y, v3_x + int(1e13), v3_y + int(1e13)
-        )
-        if x1_p2.is_integer() and x2_p2.is_integer():
-            tokens_spent_p2 += int(x1_p2 * c1 + x2_p2 * c2)
-
+    tokens_spent = sum(tokens_required(*instruction) for instruction in instructions)
     print(f"Part 1: {tokens_spent}")
-    print(f"Part_2: {tokens_spent_p2}")
+
+    tokens_spent_correct = sum(
+        tokens_required(x_a, y_a, x_b, y_b, x_p + 10**13, y_p + 10**13)
+        for x_a, y_a, x_b, y_b, x_p, y_p in instructions
+    )
+    print(f"Part_2: {tokens_spent_correct}")
