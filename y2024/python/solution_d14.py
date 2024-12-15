@@ -11,6 +11,11 @@ def move_robots(
     ]
 
 
+def robots_overlap(robots: list[list[int]]) -> int:
+    positions = {(x, y) for x, y, _, _ in robots}
+    return len(positions) < len(robots)
+
+
 if __name__ == "__main__":
     pattern = re.compile(r"-?\d+")
     with open(FILEPATH, "r") as f:
@@ -36,3 +41,10 @@ if __name__ == "__main__":
 
     safety_factor = q_counts[0] * q_counts[1] * q_counts[2] * q_counts[3]
     print(f"Part 1: {safety_factor}")
+
+    s = 0
+    while robots_overlap(robots):
+        robots = move_robots(robots, max_x, max_y, 1)
+        s += 1
+
+    print(f"Part 2: {s}")
